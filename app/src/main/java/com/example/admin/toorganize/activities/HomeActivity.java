@@ -1,8 +1,8 @@
 package com.example.admin.toorganize.activities;
 
 import android.app.ActionBar;
-import android.app.FragmentManager;
-import android.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,13 +28,13 @@ import com.example.admin.toorganize.R;
 import com.example.admin.toorganize.adapters.NavDrawerListAdapter;
 import com.example.admin.toorganize.adapters.TabsPagerAdapter;
 import com.example.admin.toorganize.fragments.HomeFragment;
+import com.example.admin.toorganize.fragments.RoutinesFragment;
 import com.example.admin.toorganize.fragments.TaskListFragment;
 import com.example.admin.toorganize.models.NavDrawerItem;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends FragmentActivity  implements
-        ActionBar.TabListener {
+public class HomeActivity extends ActionBarActivity  {
 
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
@@ -129,41 +129,7 @@ public class HomeActivity extends FragmentActivity  implements
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 
-        // Initilization
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getActionBar();
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
-        viewPager.setAdapter(mAdapter);
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
-        }
-
-        /**
-         * on swiping the viewpager make respective tab selected
-         * */
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                // on changing the page
-                // make respected tab selected
-                actionBar.setSelectedNavigationItem(position);
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-        });
 
 
     }
@@ -184,9 +150,10 @@ public class HomeActivity extends FragmentActivity  implements
         Fragment fragment = null;
         switch (position) {
             case 0:
-                //fragment= new HomeFragment();
+                fragment= new HomeFragment();
                 break;
             case 1:
+                fragment= new RoutinesFragment();
 
                 break;
             case 2:
@@ -201,7 +168,7 @@ public class HomeActivity extends FragmentActivity  implements
         }
 
         if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment).commit();
 
@@ -275,24 +242,7 @@ public class HomeActivity extends FragmentActivity  implements
         return false;
     }
 
-    //View Pager
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        // on tab selected
-        // show respected fragment view
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
 
 
 

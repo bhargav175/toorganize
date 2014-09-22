@@ -4,41 +4,26 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.example.admin.toorganize.R;
-import com.example.admin.toorganize.activities.WriteTask;
-import com.example.admin.toorganize.adapters.NavDrawerListAdapter;
+import com.example.admin.toorganize.adapters.RoutineTabsPagerAdapter;
 import com.example.admin.toorganize.adapters.TabsPagerAdapter;
-import com.example.admin.toorganize.models.NavDrawerItem;
 
-import java.util.ArrayList;
-
-public class HomeFragment extends Fragment implements ActionBar.TabListener{
+public class RoutinesFragment extends Fragment implements ActionBar.TabListener{
 
     private ViewPager viewPager;
-    private TabsPagerAdapter mAdapter;
+    private RoutineTabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
     private FragmentActivity myContext;
 
-    private String[] tabs = { "Events", "Routines", "Goals","Notes" };
+    private String[] tabs = { "Today","Daily", "Weekly","Monthly" };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +48,7 @@ public class HomeFragment extends Fragment implements ActionBar.TabListener{
         // Initilization
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
         actionBar = getActivity().getActionBar();
-        mAdapter = new TabsPagerAdapter(getActivity(),getChildFragmentManager());
+        mAdapter = new RoutineTabsPagerAdapter(myContext.getSupportFragmentManager());
 
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);

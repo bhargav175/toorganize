@@ -8,7 +8,6 @@ package com.example.admin.toorganize.adapters;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.admin.toorganize.fragments.GoalListFragment;
@@ -16,15 +15,15 @@ import com.example.admin.toorganize.fragments.NoteListFragment;
 import com.example.admin.toorganize.fragments.RoutineListFragment;
 import com.example.admin.toorganize.fragments.TaskListFragment;
 
-public class TabsPagerAdapter extends FragmentStatePagerAdapter {
+public class RoutineTabsPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
 
-    public TabsPagerAdapter(Context context, FragmentManager fragmentManager) {
+    public RoutineTabsPagerAdapter(Context context, FragmentManager fragmentManager) {
         super(fragmentManager);
         this.context = context;
     }
 
-    public TabsPagerAdapter(FragmentManager fm) {
+    public RoutineTabsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
