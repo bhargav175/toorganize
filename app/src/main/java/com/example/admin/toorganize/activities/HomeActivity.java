@@ -1,14 +1,18 @@
 package com.example.admin.toorganize.activities;
 
-import android.app.Fragment;
+import android.app.ActionBar;
 import android.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -22,12 +26,23 @@ import android.widget.ListView;
 
 import com.example.admin.toorganize.R;
 import com.example.admin.toorganize.adapters.NavDrawerListAdapter;
+import com.example.admin.toorganize.adapters.TabsPagerAdapter;
+import com.example.admin.toorganize.fragments.HomeFragment;
 import com.example.admin.toorganize.fragments.TaskListFragment;
 import com.example.admin.toorganize.models.NavDrawerItem;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends ActionBarActivity implements TaskListFragment.OnFragmentInteractionListener{
+public class HomeActivity extends FragmentActivity  implements
+        ActionBar.TabListener {
+
+    private ViewPager viewPager;
+    private TabsPagerAdapter mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "Events", "Routines", "Goals","Notes" };
+
+    //Navigation Drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -40,10 +55,14 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
-    @Override
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        //Navigation Drawer
 
         mTitle = mDrawerTitle = getTitle();
 
@@ -109,12 +128,46 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
         }
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+
+        // Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        actionBar = getActionBar();
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                    .setTabListener(this));
+        }
+
+        /**
+         * on swiping the viewpager make respective tab selected
+         * */
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                // on changing the page
+                // make respected tab selected
+                actionBar.setSelectedNavigationItem(position);
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+        });
+
+
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
 
     /* The click listner for ListView in the navigation drawer */
@@ -125,13 +178,13 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
         }
     }
 
-
+    /*Navigation DRawer*/
     private void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new TaskListFragment();
+                //fragment= new HomeFragment();
                 break;
             case 1:
 
@@ -163,12 +216,15 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
         }
     }
 
+    /*Navigation DRawer*/
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
+    /*Navigation DRawer*/
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -182,7 +238,7 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
      * Fragment that appears in the "content_frame", shows a planet
      */
 
-
+    /*Navigation DRawer*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -194,6 +250,7 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
 
 
 
+    /*Navigation DRawer*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -217,4 +274,27 @@ public class HomeActivity extends ActionBarActivity implements TaskListFragment.
         }
         return false;
     }
+
+    //View Pager
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // on tab selected
+        // show respected fragment view
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+
+
+
 }

@@ -52,7 +52,7 @@ public class ViewTaskActivity extends Activity {
         if(task!=null){
             dbAdapter.updateTask(task,taskText);
             dbAdapter.close();
-            Intent intent = new Intent(this, TaskManager.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         }
         else{
