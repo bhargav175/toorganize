@@ -13,6 +13,9 @@ import com.example.admin.toorganize.fragments.GoalListFragment;
 import com.example.admin.toorganize.fragments.NoteListFragment;
 import com.example.admin.toorganize.fragments.RoutineListFragment;
 import com.example.admin.toorganize.fragments.TaskListFragment;
+import com.example.admin.toorganize.fragments.TodayFragment;
+import com.example.admin.toorganize.fragments.TomorrowFragment;
+import com.example.admin.toorganize.fragments.YesterdayFragment;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
@@ -25,11 +28,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
         switch (index) {
             case 0:
-                return new TaskListFragment();
+                return new YesterdayFragment();
             case 1:
-                return new RoutineListFragment();
+                return new TodayFragment();
             case 2:
-                return new GoalListFragment();
+                return new TomorrowFragment();
             case 3:
                 return new NoteListFragment();
 

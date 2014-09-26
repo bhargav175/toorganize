@@ -12,12 +12,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TAG="Data-base";
     public static final String TEXT ="title";
     public static final String COLUMN_ID = "id";
-    public static final String TABLE_NAME ="tasks";
+    public static final String TASKS_TABLE ="tasks";
     private static final String DATABASE_NAME = "to_organize_db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_CREATE = "create table if not exists "
-            + TABLE_NAME + "(" + COLUMN_ID
+            + TASKS_TABLE + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + TEXT
             + " text not null);";
 
@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data"
         );
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TASKS_TABLE);
         onCreate(db);
     }
 }

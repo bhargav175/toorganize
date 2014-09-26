@@ -1,14 +1,18 @@
 package com.example.admin.toorganize.activities;
 
 import android.app.ActionBar;
-import android.app.FragmentManager;
-import android.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -29,24 +33,22 @@ import com.example.admin.toorganize.adapters.NavDrawerListAdapter;
 import com.example.admin.toorganize.adapters.TabsPagerAdapter;
 import com.example.admin.toorganize.fragments.HomeFragment;
 import com.example.admin.toorganize.fragments.TaskListFragment;
+import com.example.admin.toorganize.fragments.TodayFragment;
+import com.example.admin.toorganize.fragments.YesterdayFragment;
 import com.example.admin.toorganize.models.NavDrawerItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class HomeActivity extends FragmentActivity  implements
-        ActionBar.TabListener {
+public class HomeActivity extends FragmentActivity {
 
-    private ViewPager viewPager;
-    private TabsPagerAdapter mAdapter;
-    private ActionBar actionBar;
-    // Tab titles
-    private String[] tabs = { "Events", "Routines", "Goals","Notes" };
 
+     public static final String TAG ="HomeActivity";
     //Navigation Drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    public static final String Tag="TaskManager";
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -56,11 +58,33 @@ public class HomeActivity extends FragmentActivity  implements
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
+    //Calendar
+
+    public static ArrayList<String> nameOfEvent = new ArrayList<String>();
+    public static ArrayList<String> startDates = new ArrayList<String>();
+    public static ArrayList<String> endDates = new ArrayList<String>();
+    public static ArrayList<String> descriptions = new ArrayList<String>();
+
+
+    // Projection array. Creating indices for this array instead of doing
+// dynamic lookups improves performance.
+    public static final String[] EVENT_PROJECTION = new String[] {
+            CalendarContract.Calendars._ID,                           // 0
+            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
+            CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
+    };
+
+    // The indices for the projection array above.
+    private static final int PROJECTION_ID_INDEX = 0;
+    private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
+    private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
+    private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
 
         //Navigation Drawer
 
@@ -78,17 +102,12 @@ public class HomeActivity extends FragmentActivity  implements
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
-        // adding nav drawer items to array
-        // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Find People
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Photos
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Communities, Will add a counter here
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
-        // Pages
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(5, -1)));
 
 
         // Recycle the typed array
@@ -100,8 +119,6 @@ public class HomeActivity extends FragmentActivity  implements
         mDrawerList.setAdapter(adapter);
 
         // enabling action bar app icon and behaving it as toggle button
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, //nav menu toggle icon
@@ -129,44 +146,8 @@ public class HomeActivity extends FragmentActivity  implements
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 
-        // Initilization
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getActionBar();
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-
-        viewPager.setAdapter(mAdapter);
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
-        }
-
-        /**
-         * on swiping the viewpager make respective tab selected
-         * */
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                // on changing the page
-                // make respected tab selected
-                actionBar.setSelectedNavigationItem(position);
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-        });
-
-
     }
+
 
 
 
@@ -184,16 +165,20 @@ public class HomeActivity extends FragmentActivity  implements
         Fragment fragment = null;
         switch (position) {
             case 0:
-                //fragment= new HomeFragment();
+                fragment= new TodayFragment();
                 break;
             case 1:
+                fragment= new YesterdayFragment();
 
                 break;
             case 2:
                 break;
             case 3:
+                fragment= new TaskListFragment();
                 break;
             case 4:
+                break;
+            case 5:
                 break;
 
             default:
@@ -201,7 +186,7 @@ public class HomeActivity extends FragmentActivity  implements
         }
 
         if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment).commit();
 
@@ -243,7 +228,7 @@ public class HomeActivity extends FragmentActivity  implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.task_manager, menu);
+        inflater.inflate(R.menu.home, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -263,38 +248,23 @@ public class HomeActivity extends FragmentActivity  implements
         }
         if (id == R.id.action_search) {
             //handleYourEvent();
-            Log.d(Tag, "Seach");
+            Log.d(TAG, "Search");
             return true;
         }
-        if (id == R.id.action_new) {
+        if (id == R.id.action_new_task) {
             //handleYourEvent();
             Intent intent = new Intent(this, WriteTask.class);
             startActivity(intent);
             return true;
         }
+        if (id == R.id.action_new_event) {
+            //handleYourEvent();
+            Intent intent = new Intent(this, WriteEvent.class);
+            startActivity(intent);
+            return true;
+        }
         return false;
     }
-
-    //View Pager
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        // on tab selected
-        // show respected fragment view
-        viewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-
 
 
 }

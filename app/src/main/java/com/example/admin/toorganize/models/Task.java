@@ -6,6 +6,9 @@ package com.example.admin.toorganize.models;
 public class Task {
     private long id;
     private String taskText;
+    private String taskDescription;
+    private String taskQuestion;
+    private long startMilliSeconds;
 
     public Task(){
 

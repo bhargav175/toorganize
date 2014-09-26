@@ -23,9 +23,14 @@
     <string name="profile_picture">User\'s profile picture.</string>
     <string name="title_activity_task_manager">TaskManager</string>
     <string name="title_activity_write_task">New Task</string>
+    <string name="title_activity_write_event">New Event</string>
     <string name="save_write_task">Save Task</string>
     <string name="search_string">Search </string>
-    <string name="add_string"></string>
+    <string name="add_string">Add</string>
+    <string name="add_event_string">Add Event</string>
+    <string name="add_task_string">Add Note</string>
+    <string name="add_habit_string">Add Habit</string>
+    <string name="add_todo_string">Add To Do Item</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="task_text_hint"> Add Task Text </string>
     <string name="title_activity_view_task">Task</string>
@@ -35,10 +40,11 @@
     <string name="title_activity_home">HomeActivity</string>
 
     <string-array name="nav_drawer_items">
+        <item>Dashboard</item>
         <item>Events</item>
         <item>Routines</item>
+        <item>To Do List</item>
         <item>Notes</item>
-        <item>Goals</item>
         <item>Settings</item>
     </string-array>
 
@@ -67,5 +73,11 @@
     <string name="write_note_title_hint">Note Title</string>
     <string name="write_note_label">Add Note</string>
     <string name="title_activity_view_calendar">ViewCalendar</string>
+    <string name="save_write_event">Save Event</string>
+    <string name="cancel_write_event">Cancel Event</string>
+    <string name="event_title_hint">Add an event</string>
+    <string name="add_reminder_event">Add Reminder</string>
+    <string name="add_guest_event">Add Guest</string>
+    <string name="desc">Profile Pic</string>
 
 </resources>
