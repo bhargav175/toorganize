@@ -79,5 +79,12 @@
     <string name="add_reminder_event">Add Reminder</string>
     <string name="add_guest_event">Add Guest</string>
     <string name="desc">Profile Pic</string>
+    <string name="update_write_note">Update Note</string>
+    <string name="update_note_label">Update Note</string>
+    <string name="title_view_notes">Notes</string>
+    <string name="title_list_notes">Notes</string>
+    <string name="title_view_note">Note</string>
+    <string name="title_activity_write_todo">Write Todo</string>
+    <string name="title_view_todo">To Do</string>
 
 </resources>

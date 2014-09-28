@@ -9,25 +9,27 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.admin.toorganize.helpers.DBHelper;
+import com.example.admin.toorganize.models.Note;
 import com.example.admin.toorganize.models.Task;
 
 /**
  * Created by Admin on 16-09-2014.
  */
-public class DBAdapter {
+public class TaskDBHelper {
     private final static String TASKS_TABLE = "tasks";
+    private final static String NOTES_TABLE = "notes";
     private final static String TAG = "TAG-DBAdapter";
 
     private DBHelper dbHelper;
     private Context context;
     private SQLiteDatabase database;
 
-    public DBAdapter(Context context) {
+    public TaskDBHelper(Context context) {
         this.context = context;
 
     }
 
-    public DBAdapter open() throws SQLException {
+    public TaskDBHelper open() throws SQLException {
         dbHelper = new DBHelper(context);
         database = dbHelper.getWritableDatabase();
         return this;
@@ -43,7 +45,7 @@ public class DBAdapter {
     }
 
     public Task getTask(int id) {
-        Cursor cursor = database.query(TASKS_TABLE, new String[] {DBHelper.COLUMN_ID, DBHelper.TEXT }, DBHelper.COLUMN_ID + "=?",
+        Cursor cursor = database.query(TASKS_TABLE, new String[] {DBHelper.COLUMN_ID, DBHelper.TASK_TITLE }, DBHelper.COLUMN_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
@@ -58,7 +60,7 @@ public class DBAdapter {
 
         database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DBHelper.TEXT, taskText);
+        values.put(DBHelper.TASK_TITLE, taskText);
 
         // updating row
         return database.update(TASKS_TABLE, values, DBHelper.COLUMN_ID + " = ?",
@@ -84,6 +86,9 @@ public class DBAdapter {
         Toast.makeText(context,task.getText(), Toast.LENGTH_LONG).show();
     }
 
+
+
+
     private String getPrevTaskId(String tableName) {
         try {
             Cursor cr = database.query(tableName, null, null, null, null, null, null);
@@ -93,5 +98,6 @@ public class DBAdapter {
             return "-1";
         }
     }
+
 
 }

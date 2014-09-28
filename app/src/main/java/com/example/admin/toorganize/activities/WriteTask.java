@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,13 +14,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.admin.toorganize.R;
-import com.example.admin.toorganize.database.DBAdapter;
-import com.example.admin.toorganize.fragments.TaskListFragment;
+import com.example.admin.toorganize.database.TaskDBHelper;
 import com.example.admin.toorganize.fragments.TimeDialogFragment;
 import com.example.admin.toorganize.models.Task;
 
 public class WriteTask extends Activity implements View.OnClickListener {
-    private DBAdapter dbAdapter;
+    private TaskDBHelper taskDbHelper;
     private EditText taskText,dateEditText;
     private Button saveTaskBtn,setDateBtn;
     private AlarmManager alarmMgr;
@@ -58,8 +56,8 @@ public class WriteTask extends Activity implements View.OnClickListener {
         taskText = (EditText) findViewById(R.id.taskText);
         setDateBtn=(Button)findViewById(R.id.set_date_button_task);
         dateEditText=(EditText)findViewById(R.id.task_edit_text_dt);
-        dbAdapter= new DBAdapter(this);
-        dbAdapter.open();
+        taskDbHelper = new TaskDBHelper(this);
+        taskDbHelper.open();
         saveTaskBtn = (Button) findViewById(R.id.save_task_btn);
     }
     private void setListeners() {
@@ -84,9 +82,9 @@ public class WriteTask extends Activity implements View.OnClickListener {
             case R.id.save_task_btn:
                 Task task = new Task();
                 task.setText(taskText.getText().toString());
-                dbAdapter.open();
+                taskDbHelper.open();
 
-                dbAdapter.saveTask(task);
+                taskDbHelper.saveTask(task);
 //                alarmMgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 //                alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 //                        AlarmManager.INTERVAL_HALF_HOUR,

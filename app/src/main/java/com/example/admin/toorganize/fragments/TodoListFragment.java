@@ -1,9 +1,9 @@
 package com.example.admin.toorganize.fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NoteListFragment extends Fragment {
+public class TodoListFragment extends Fragment {
     private NoteDBHelper noteDbHelper;
     public static final String Tag="NoteListActivity";
     public final static String EXTRA_MESSAGE = "com.example.admin.toorganize.NoteListActivity";
@@ -30,13 +30,13 @@ public class NoteListFragment extends Fragment {
 
 
 
-    public static NoteListFragment newInstance(String param1, String param2) {
-        NoteListFragment fragment = new NoteListFragment();
+    public static TodoListFragment newInstance(String param1, String param2) {
+        TodoListFragment fragment = new TodoListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
-    public NoteListFragment() {
+    public TodoListFragment() {
         // Required empty public constructor
     }
 

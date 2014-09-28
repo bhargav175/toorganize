@@ -1,11 +1,7 @@
 package com.example.admin.toorganize.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,15 +14,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.admin.toorganize.R;
-import com.example.admin.toorganize.database.DBAdapter;
+import com.example.admin.toorganize.database.TaskDBHelper;
 import com.example.admin.toorganize.models.Task;
-import com.google.android.gms.plus.Plus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskManager extends  ActionBarActivity {
-    private DBAdapter dbAdapter;
+    private TaskDBHelper taskDbHelper;
     public static final String Tag="TaskManager";
     public final static String EXTRA_MESSAGE = "com.example.admin.toorganize.TaskManager";
     public final static String TASK_TEXT = "task_text";
@@ -38,7 +33,7 @@ public class TaskManager extends  ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_manager);
         List<Task> taskList = new ArrayList<Task>();
-        dbAdapter= new DBAdapter(this);
+        taskDbHelper = new TaskDBHelper(this);
 
         ArrayAdapter<Task> adapter = new ArrayAdapter<Task>(this,
                 android.R.layout.simple_list_item_1, getAllTasks(taskList));
@@ -61,17 +56,17 @@ public class TaskManager extends  ActionBarActivity {
     }
 
     private List<Task> getAllTasks(List<Task> taskList) {
-        dbAdapter.open();
-        Cursor cursor= dbAdapter.fetchAllTasks();
+        taskDbHelper.open();
+        Cursor cursor= taskDbHelper.fetchAllTasks();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Task task = dbAdapter.cursorToTask(cursor);
+            Task task = taskDbHelper.cursorToTask(cursor);
             taskList.add(task);
             cursor.moveToNext();
         }
         // make sure to close the cursor
         cursor.close();
-        dbAdapter.close();
+        taskDbHelper.close();
         return taskList;
     }
 

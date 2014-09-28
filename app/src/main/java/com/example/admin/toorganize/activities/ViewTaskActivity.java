@@ -2,7 +2,6 @@ package com.example.admin.toorganize.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,11 +11,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.admin.toorganize.R;
-import com.example.admin.toorganize.database.DBAdapter;
+import com.example.admin.toorganize.database.TaskDBHelper;
 import com.example.admin.toorganize.models.Task;
 
 public class ViewTaskActivity extends Activity {
-    private DBAdapter dbAdapter;
+    private TaskDBHelper taskDbHelper;
 
     protected EditText taskTextInput;
     @Override
@@ -46,17 +45,17 @@ public class ViewTaskActivity extends Activity {
 
     private void updateTask(Integer taskId) {
         String taskText=taskTextInput.getText().toString();
-        dbAdapter= new DBAdapter(this);
-        dbAdapter.open();
-        Task task = dbAdapter.getTask(taskId);
+        taskDbHelper = new TaskDBHelper(this);
+        taskDbHelper.open();
+        Task task = taskDbHelper.getTask(taskId);
         if(task!=null){
-            dbAdapter.updateTask(task,taskText);
-            dbAdapter.close();
+            taskDbHelper.updateTask(task,taskText);
+            taskDbHelper.close();
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         }
         else{
-            dbAdapter.close();
+            taskDbHelper.close();
             Toast.makeText(this,"Update Failed",Toast.LENGTH_LONG).show();
         }
 

@@ -1,6 +1,7 @@
 package com.example.admin.toorganize.activities;
 
 import android.app.ActionBar;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
@@ -32,9 +33,12 @@ import com.example.admin.toorganize.R;
 import com.example.admin.toorganize.adapters.NavDrawerListAdapter;
 import com.example.admin.toorganize.adapters.TabsPagerAdapter;
 import com.example.admin.toorganize.fragments.HomeFragment;
+import com.example.admin.toorganize.fragments.NoteListFragment;
 import com.example.admin.toorganize.fragments.TaskListFragment;
 import com.example.admin.toorganize.fragments.TodayFragment;
+import com.example.admin.toorganize.fragments.TodoListFragment;
 import com.example.admin.toorganize.fragments.YesterdayFragment;
+import com.example.admin.toorganize.helpers.DBHelper;
 import com.example.admin.toorganize.models.NavDrawerItem;
 
 import java.text.SimpleDateFormat;
@@ -57,6 +61,7 @@ public class HomeActivity extends FragmentActivity {
     private TypedArray navMenuIcons;
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    private static final String DATABASE_NAME = "to_organize_db";
 
     //Calendar
 
@@ -107,7 +112,7 @@ public class HomeActivity extends FragmentActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(5, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
 
 
         // Recycle the typed array
@@ -146,6 +151,7 @@ public class HomeActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 
+
     }
 
 
@@ -174,9 +180,10 @@ public class HomeActivity extends FragmentActivity {
             case 2:
                 break;
             case 3:
-                fragment= new TaskListFragment();
+                fragment= new TodoListFragment();
                 break;
             case 4:
+                fragment= new NoteListFragment();
                 break;
             case 5:
                 break;
@@ -251,15 +258,16 @@ public class HomeActivity extends FragmentActivity {
             Log.d(TAG, "Search");
             return true;
         }
-        if (id == R.id.action_new_task) {
-            //handleYourEvent();
-            Intent intent = new Intent(this, WriteTask.class);
-            startActivity(intent);
-            return true;
-        }
+
         if (id == R.id.action_new_event) {
             //handleYourEvent();
             Intent intent = new Intent(this, WriteEvent.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_new_note) {
+            //handleYourEvent();
+            Intent intent = new Intent(this, Write_Note_Activity.class);
             startActivity(intent);
             return true;
         }

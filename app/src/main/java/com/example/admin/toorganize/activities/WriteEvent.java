@@ -1,6 +1,5 @@
 package com.example.admin.toorganize.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
@@ -8,63 +7,46 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.toorganize.R;
 import com.example.admin.toorganize.adapters.ContactAutoAdapter;
-import com.example.admin.toorganize.database.DBAdapter;
+import com.example.admin.toorganize.database.TaskDBHelper;
 import com.example.admin.toorganize.fragments.FromEventDateDialogFragment;
 import com.example.admin.toorganize.fragments.FromEventTimeDialogFragment;
-import com.example.admin.toorganize.fragments.TimeDialogFragment;
 import com.example.admin.toorganize.fragments.ToEventDateDialogFragment;
 import com.example.admin.toorganize.fragments.ToEventTimeDialogFragment;
 import com.example.admin.toorganize.models.EContact;
 import com.example.admin.toorganize.models.ReminderCl;
-import com.example.admin.toorganize.models.Task;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 
 public class WriteEvent extends Activity implements View.OnClickListener {
     public static final String TAG ="EventPhoto";
-    private DBAdapter dbAdapter;
+    private TaskDBHelper taskDbHelper;
     private EditText eventText,eventDescription,eventLocation ,setFromDateBtn,setToDateBtn,setFromTimeBtn,setToTimeBtn;
-    private AutoCompleteTextView  guestAdd;
-
+    private MultiAutoCompleteTextView guestAdd;
+    private ArrayList<EContact> contacts;
     private Button saveEventBtn, addReminderButton, cancelEventBtn;
     private LinearLayout reminderContainer;
     private AlarmManager alarmMgr;
@@ -124,9 +106,10 @@ public class WriteEvent extends Activity implements View.OnClickListener {
             });
         }
 
-        protected void onPostExecute(ArrayList<EContact> contacts)
+        protected void onPostExecute(ArrayList<EContact> contactss)
         {
-            setAutoComplete(contacts);
+            setAutoComplete(contactss);
+            contacts = (ArrayList<EContact>) contactss.clone();
             guestAdd.setFocusableInTouchMode(true);
             WriteEvent.this.runOnUiThread(new Runnable() {
                 public void run() {
@@ -148,7 +131,7 @@ public class WriteEvent extends Activity implements View.OnClickListener {
         }
     }
     private void initUi() {
-        guestAdd = (AutoCompleteTextView)findViewById(R.id.guest_view);
+        guestAdd = (MultiAutoCompleteTextView)findViewById(R.id.guest_view);
         fromDate = Calendar.getInstance();
         toDate =  Calendar.getInstance();
         eventText = (EditText) findViewById(R.id.eventTitle);
@@ -157,8 +140,8 @@ public class WriteEvent extends Activity implements View.OnClickListener {
         setToDateBtn=(EditText)findViewById(R.id.editToDate);
         setFromTimeBtn=(EditText)findViewById(R.id.editFromTime);
         setToTimeBtn=(EditText)findViewById(R.id.editToTime);
-        dbAdapter= new DBAdapter(this);
-        dbAdapter.open();
+        taskDbHelper = new TaskDBHelper(this);
+        taskDbHelper.open();
         saveEventBtn = (Button) findViewById(R.id.save_event_btn);
         addReminderButton = (Button) findViewById(R.id.add_reminder_button);
         cancelEventBtn = (Button) findViewById(R.id.cancel_event_button);
@@ -174,14 +157,15 @@ public class WriteEvent extends Activity implements View.OnClickListener {
 
     }
 
-    private void setAutoComplete(ArrayList<EContact> contacts){
+    private void setAutoComplete(ArrayList<EContact> contactss){
         ArrayAdapter<EContact> adapter = new ContactAutoAdapter(this,
-                R.layout.contact_display_item,R.id.textView, contacts);
+                R.layout.contact_display_item,R.id.textView, contactss);
         guestAdd.setAdapter(adapter);
+        guestAdd.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
     }
 
     private ArrayList<EContact> addAutoCompleteAttendees() throws IOException {
-        final ArrayList<EContact> contacts = new ArrayList<EContact>();
+        ArrayList<EContact> contactss = new ArrayList<EContact>();
 
         ContentResolver cr = getContentResolver();
 
@@ -194,11 +178,11 @@ public class WriteEvent extends Activity implements View.OnClickListener {
             eContact.setName(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME)));
             eContact.setEmail(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
             eContact.setPhoto_uri(emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI)));
-            contacts.add(eContact);
+            contactss.add(eContact);
         }
         emailCur.close();
 
-        return contacts;
+        return contactss;
     }
 
     private Uri getPhotoUriFromID(String id) {
@@ -386,7 +370,18 @@ public class WriteEvent extends Activity implements View.OnClickListener {
                 String description =eventDescription.getText().toString();
                 Long startMillis = fromDate.getTimeInMillis();
                 Long endMillis = toDate.getTimeInMillis();
+                String[] emailStrings=guestAdd.getText().toString().split(", ");
 
+//                for(int i=0; i<emailStrings.length; i++) {
+//
+//
+//                }
+//
+//
+//                for(EContact eContact : contacts){
+//
+//                }
+//
 
 
 

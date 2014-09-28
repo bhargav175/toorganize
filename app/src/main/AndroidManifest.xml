@@ -65,6 +65,22 @@
             android:label="@string/title_activity_write__note_" >
         </activity>
         <activity
+            android:name=".activities.NoteListActivity"
+            android:label="@string/title_list_notes" >
+        </activity>
+        <activity
+            android:name=".activities.ViewNoteActivity"
+            android:label="@string/title_view_note" >
+        </activity>
+        <activity
+            android:name=".activities.Write_Todo_Activity"
+            android:label="@string/title_activity_write_todo" >
+        </activity>
+        <activity
+            android:name=".activities.ViewToDoActivity"
+            android:label="@string/title_view_todo" >
+        </activity>
+        <activity
             android:name=".activities.ViewCalendar"
             android:label="@string/title_activity_view_calendar" >
 

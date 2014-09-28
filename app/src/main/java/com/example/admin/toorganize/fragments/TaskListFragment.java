@@ -1,9 +1,7 @@
 package com.example.admin.toorganize.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,7 +13,7 @@ import android.widget.ListView;
 
 import com.example.admin.toorganize.R;
 import com.example.admin.toorganize.activities.ViewTaskActivity;
-import com.example.admin.toorganize.database.DBAdapter;
+import com.example.admin.toorganize.database.TaskDBHelper;
 import com.example.admin.toorganize.models.Task;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import java.util.List;
 
 public class TaskListFragment extends Fragment {
 
-    private DBAdapter dbAdapter;
+    private TaskDBHelper taskDbHelper;
     public static final String Tag="TaskManager";
     public final static String EXTRA_MESSAGE = "com.example.admin.toorganize.TaskManager";
     public final static String TASK_TEXT = "task_text";
@@ -59,17 +57,17 @@ public class TaskListFragment extends Fragment {
     }
 
     private List<Task> getAllTasks(List<Task> taskList) {
-        dbAdapter.open();
-        Cursor cursor= dbAdapter.fetchAllTasks();
+        taskDbHelper.open();
+        Cursor cursor= taskDbHelper.fetchAllTasks();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Task task = dbAdapter.cursorToTask(cursor);
+            Task task = taskDbHelper.cursorToTask(cursor);
             taskList.add(task);
             cursor.moveToNext();
         }
         // make sure to close the cursor
         cursor.close();
-        dbAdapter.close();
+        taskDbHelper.close();
         return taskList;
     }
 
@@ -77,7 +75,7 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         List<Task> taskList = new ArrayList<Task>();
-        dbAdapter= new DBAdapter(getActivity());
+        taskDbHelper = new TaskDBHelper(getActivity());
         View view=inflater.inflate(R.layout.fragment_task_list, container, false);
         ArrayAdapter<Task> adapter = new ArrayAdapter<Task>(getActivity(),
                 android.R.layout.simple_list_item_1, getAllTasks(taskList));

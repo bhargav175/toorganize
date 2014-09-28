@@ -12,21 +12,17 @@ import android.widget.EditText;
 
 import com.example.admin.toorganize.R;
 import com.example.admin.toorganize.database.NoteDBHelper;
-import com.example.admin.toorganize.database.TaskDBHelper;
 import com.example.admin.toorganize.models.Note;
 
-public class Write_Note_Activity extends Activity implements View.OnClickListener{
-    private NoteDBHelper noteDBHelper;
-    private EditText noteText;
-    private Button saveNoteBTn;
-    protected CheckBox noteIsDashboardHead;
+public class Write_Todo_Activity extends Activity implements View.OnClickListener{
+
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_write_note);
+        setContentView(R.layout.activity_write_todo);
         initUi();
         setListeners();
     }
@@ -35,7 +31,7 @@ public class Write_Note_Activity extends Activity implements View.OnClickListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.write_note, menu);
+        getMenuInflater().inflate(R.menu.write_todo, menu);
         return true;
     }
 
@@ -54,15 +50,9 @@ public class Write_Note_Activity extends Activity implements View.OnClickListene
         return super.onOptionsItemSelected(item);
     }
     private void initUi() {
-        noteText = (EditText) findViewById(R.id.noteText);
-        noteDBHelper = new NoteDBHelper(this);
-        noteDBHelper.open();
-        noteIsDashboardHead = (CheckBox) findViewById(R.id.isDashboardHead);
 
-        saveNoteBTn = (Button) findViewById(R.id.save_note_btn);
     }
     private void setListeners() {
-        saveNoteBTn.setOnClickListener(this);
 
     }
 
@@ -71,15 +61,6 @@ public class Write_Note_Activity extends Activity implements View.OnClickListene
         switch (v.getId()) {
 
             case R.id.save_note_btn:
-                Note note = new Note();
-                note.setNoteText(noteText.getText().toString());
-                note.setIsDashboardHead(noteIsDashboardHead.isChecked());
-                noteDBHelper.open();
-                noteDBHelper.saveNote(note);
-                Intent intent = new Intent(this, HomeActivity.class);
-                noteDBHelper.close();
-
-                startActivity(intent);
                 break;
         }
     }

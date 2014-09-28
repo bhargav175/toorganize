@@ -18,11 +18,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:text="@string/write_note_label"
+            android:text="@string/update_note_label"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
-            android:textSize="32dp"
+            android:textSize="32sp"
             android:paddingStart="8dp" />
     </LinearLayout>
 
@@ -60,10 +60,11 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_write_note"
-        android:id="@+id/save_note_btn"
+        android:text="@string/update_write_note"
+        android:id="@+id/update_note_btn"
         android:background="#e0ab18"
-        android:textColor="#fff" />
+        android:textColor="#fff"
+        android:layout_marginTop="8dp" />
 
 
 
